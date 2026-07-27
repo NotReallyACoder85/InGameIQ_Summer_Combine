@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IN-GAME IQ — Summer Session Combine Results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --iq-teal:#12C7CD; --iq-teal-deep:#0EA8AE; --iq-teal-glow:rgba(18,199,205,.18);
+  --iq-graphite:#5F6065; --iq-charcoal:#1B1D21; --iq-black:#0D0F12;
+  --iq-ice:#F3F6F7; --iq-silver:#D9DEE1; --iq-white:#FFFFFF;
+  --font-display:'Bebas Neue','Impact',sans-serif;
+  --font-sub:'Barlow Condensed','Arial Narrow',sans-serif;
+  --font-ui:'Rajdhani',sans-serif;
+  --font-body:'Barlow',sans-serif;
+  --radius:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font-body);background:var(--iq-ice);color:var(--iq-charcoal);line-height:1.5;font-size:16px;}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px 60px;}
+
+/* HERO */
+.hero{background:var(--iq-black);padding:52px 24px 40px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 20%, rgba(18,199,205,.14) 0%, transparent 70%);}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--iq-teal),transparent);}
+.hero-wordmark{position:relative;font-family:var(--font-display);font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:.06em;color:var(--iq-white);}
+.hero-wordmark span{color:var(--iq-teal);}
+.hero-badge{position:relative;display:inline-block;font-family:var(--font-ui);font-weight:700;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--iq-teal);border:1px solid rgba(18,199,205,.4);padding:5px 16px;border-radius:2px;margin-top:18px;}
+.hero h1{position:relative;font-family:var(--font-display);font-size:clamp(2.6rem,7vw,4.6rem);letter-spacing:.03em;color:var(--iq-white);margin-top:10px;line-height:1;}
+.hero h1 span{color:var(--iq-teal);}
+.hero-sub{position:relative;font-family:var(--font-sub);font-weight:700;font-size:clamp(.95rem,2vw,1.15rem);letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:10px;}
+.hero-meta{position:relative;display:flex;justify-content:center;gap:36px;margin-top:28px;flex-wrap:wrap;}
+.hero-stat{text-align:center;}
+.hero-stat-value{font-family:var(--font-display);font-size:1.5rem;color:var(--iq-teal);}
+.hero-stat-label{font-family:var(--font-ui);font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:2px;}
+
+/* SECTION HEADERS */
+.sec{padding:40px 0;}
+.sec-header{display:flex;align-items:baseline;gap:14px;margin-bottom:24px;border-bottom:1px solid rgba(18,199,205,.25);padding-bottom:14px;}
+.sec-title{font-family:var(--font-display);font-size:clamp(1.5rem,3.5vw,2rem);letter-spacing:.03em;color:var(--iq-charcoal);}
+.sec-intro{font-size:.92rem;color:#4b5563;max-width:680px;margin:-10px 0 22px;line-height:1.6;}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:-34px;position:relative;z-index:2;}
+.kpi-card{background:var(--iq-white);border-radius:var(--radius);padding:18px 20px;border:1px solid var(--iq-silver);box-shadow:0 4px 14px rgba(0,0,0,.08);}
+.kpi-label{font-family:var(--font-ui);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--iq-graphite);margin-bottom:6px;}
+.kpi-value{font-family:var(--font-display);font-size:1.9rem;letter-spacing:.02em;color:var(--iq-charcoal);}
+.kpi-value span{color:var(--iq-teal-deep);}
+.kpi-sub{font-size:.78rem;color:var(--iq-graphite);margin-top:2px;}
+
+@media(max-width:860px){.kpi-row{grid-template-columns:1fr 1fr;}}
+
+/* CONTROLS BAR */
+.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;background:var(--iq-charcoal);border-radius:var(--radius);padding:18px 22px;margin-top:24px;}
+.ctrl-group{display:flex;flex-direction:column;gap:6px;}
+.ctrl-group label{font-family:var(--font-ui);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--iq-teal);}
+.ctrl-group select{font-family:var(--font-body);font-size:.9rem;padding:8px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:var(--iq-white);min-width:170px;}
+.ctrl-group select option{background:var(--iq-charcoal);color:var(--iq-white);}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+.compare-picker{background:var(--iq-charcoal);border-radius:var(--radius);padding:18px 22px;margin-bottom:22px;}
+.compare-picker .chip-row{max-width:none;}
+.chip{font-family:var(--font-ui);font-size:.75rem;font-weight:600;letter-spacing:.04em;padding:6px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.75);cursor:pointer;user-select:none;transition:all .15s;background:rgba(255,255,255,.04);}
+.chip.active{background:var(--iq-teal);color:var(--iq-black);border-color:var(--iq-teal);font-weight:700;}
+.ctrl-hint{font-size:.76rem;color:rgba(255,255,255,.4);margin-top:2px;}
+
+/* MY ATHLETE PANEL */
+.athlete-panel{display:none;margin-top:24px;}
+.athlete-panel.show{display:block;}
+.athlete-card{background:var(--iq-white);border-radius:var(--radius);border:1px solid var(--iq-silver);overflow:hidden;}
+.athlete-card-head{background:var(--iq-charcoal);padding:22px 26px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.athlete-name{font-family:var(--font-display);font-size:2.2rem;letter-spacing:.03em;color:var(--iq-white);}
+.athlete-name span{color:var(--iq-teal);}
+.athlete-grade{font-family:var(--font-ui);font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:2px;}
+.iq-index-badge{text-align:center;}
+.iq-index-value{font-family:var(--font-display);font-size:2.4rem;color:var(--iq-teal);line-height:1;}
+.iq-index-label{font-family:var(--font-ui);font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);}
+.athlete-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;}
+@media(max-width:700px){.athlete-stats{grid-template-columns:1fr 1fr;}}
+.astat{padding:20px 22px;border-right:1px solid var(--iq-silver);border-bottom:1px solid var(--iq-silver);}
+.astat:nth-child(3n){border-right:none;}
+.astat-label{font-family:var(--font-ui);font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--iq-graphite);}
+.astat-value{font-family:var(--font-display);font-size:1.7rem;color:var(--iq-charcoal);margin-top:4px;}
+.astat-value small{font-family:var(--font-body);font-size:.85rem;color:var(--iq-graphite);font-weight:400;}
+.astat-bar{height:5px;border-radius:3px;background:var(--iq-silver);overflow:hidden;margin-top:8px;}
+.astat-bar-fill{height:100%;background:var(--iq-teal);}
+.astat-rank{font-size:.76rem;color:var(--iq-teal-deep);font-weight:600;margin-top:5px;}
+.stat-twin{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:16px 22px;background:var(--iq-teal-glow);border-top:1px solid var(--iq-silver);}
+.twin-label{font-family:var(--font-ui);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--iq-teal-deep);}
+.twin-name{font-family:var(--font-sub);font-weight:700;font-size:1.05rem;color:var(--iq-charcoal);}
+.twin-pct{font-size:.82rem;color:var(--iq-graphite);}
+
+/* AWARDS / PODIUM */
+.awards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+@media(max-width:860px){.awards-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.awards-grid{grid-template-columns:1fr;}}
+.award-card{background:var(--iq-charcoal);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;}
+.award-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--iq-teal-deep),var(--iq-teal));}
+.award-title{font-family:var(--font-sub);font-weight:700;font-size:.9rem;text-transform:uppercase;letter-spacing:.05em;color:var(--iq-teal);margin-bottom:14px;}
+.podium-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.07);}
+.podium-row:last-child{border-bottom:none;}
+.podium-rank{font-family:var(--font-display);font-size:1.2rem;width:24px;text-align:center;flex-shrink:0;color:rgba(255,255,255,.3);}
+.podium-rank.r1{color:var(--iq-teal);}
+.podium-rank.r2{color:#8fd9db;}
+.podium-rank.r3{color:rgba(255,255,255,.5);}
+.podium-rank.r4{color:rgba(255,255,255,.38);}
+.podium-rank.r5{color:rgba(255,255,255,.3);}
+.podium-name{font-family:var(--font-ui);font-weight:600;font-size:.9rem;color:var(--iq-white);flex:1;}
+.podium-val{font-family:var(--font-ui);font-weight:700;font-size:.88rem;color:rgba(255,255,255,.7);}
+
+/* TABLE */
+.table-wrap{background:var(--iq-white);border-radius:var(--radius);border:1px solid var(--iq-silver);overflow-x:auto;}
+table.data{width:100%;border-collapse:collapse;font-size:.86rem;min-width:720px;}
+table.data th{font-family:var(--font-ui);font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--iq-graphite);text-align:left;padding:12px 14px;border-bottom:2px solid var(--iq-teal);cursor:pointer;white-space:nowrap;user-select:none;}
+table.data th:hover{color:var(--iq-teal-deep);}
+table.data td{padding:10px 14px;border-bottom:1px solid var(--iq-ice);white-space:nowrap;}
+table.data tbody tr:hover{background:var(--iq-ice);}
+table.data td.best{color:var(--iq-teal-deep);font-weight:700;}
+.sort-arrow{color:var(--iq-teal);margin-left:3px;}
+.name-cell{font-family:var(--font-ui);font-weight:700;color:var(--iq-charcoal);}
+.grade-badge{display:inline-block;font-family:var(--font-ui);font-size:.68rem;font-weight:600;color:var(--iq-graphite);background:var(--iq-ice);border:1px solid var(--iq-silver);border-radius:10px;padding:1px 8px;margin-left:6px;}
+
+/* COMPARE */
+.compare-layout{display:grid;grid-template-columns:1fr;gap:20px;align-items:start;}
+.compare-chart-card{background:var(--iq-charcoal);border-radius:var(--radius);padding:22px;max-width:520px;margin:0 auto;width:100%;}
+.compare-empty{color:rgba(255,255,255,.4);font-size:.9rem;text-align:center;padding:60px 20px;font-family:var(--font-body);}
+.compare-table{min-width:0 !important;}
+.compare-table td, .compare-table th{font-size:.82rem;white-space:normal;}
+.legend-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;}
+
+/* FOOTER */
+.footer{background:var(--iq-black);border-top:2px solid var(--iq-teal);padding:34px 24px;text-align:center;margin-top:20px;}
+.footer-brand{font-family:var(--font-display);font-size:1.7rem;letter-spacing:.06em;color:var(--iq-teal);margin-bottom:6px;}
+.footer-line{font-family:var(--font-ui);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-wordmark">IN-GAME <span>IQ</span></div>
+  <h1>COMBINE <span>RESULTS</span></h1>
+  <div class="hero-badge">Summer Session &middot; IN-GAME IQ Academy</div>
+  <div class="hero-sub">July 25, 2026 &middot; Orlando, FL</div>
+  <div class="hero-meta">
+    <div class="hero-stat"><div class="hero-stat-value" id="m-count">--</div><div class="hero-stat-label">Athletes Tested</div></div>
+    <div class="hero-stat"><div class="hero-stat-value">5</div><div class="hero-stat-label">Tests Run</div></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="kpi-row" id="kpi-row"></div>
+
+  <div class="controls">
+    <div class="ctrl-group">
+      <label>My Athlete</label>
+      <select id="athlete-select">
+        <option value="">Select a player…</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <label>Grade Filter</label>
+      <select id="grade-select">
+        <option value="all">All Grades</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- MY ATHLETE -->
+  <div class="athlete-panel" id="athlete-panel">
+    <div class="sec-header"><div class="sec-title">My Athlete</div></div>
+    <div class="athlete-card">
+      <div class="athlete-card-head">
+        <div>
+          <div class="athlete-name" id="a-name">—</div>
+          <div class="athlete-grade" id="a-grade">—</div>
+        </div>
+        <div class="iq-index-badge">
+          <div class="iq-index-value" id="a-index">--</div>
+          <div class="iq-index-label">IQ Index</div>
+        </div>
+      </div>
+      <div class="athlete-stats" id="a-stats"></div>
+      <div class="stat-twin" id="a-twin"></div>
+    </div>
+  </div>
+
+  <!-- AWARDS -->
+  <div class="sec" id="awards-sec">
+    <div class="sec-header"><div class="sec-title">Standouts of the Day</div></div>
+    <p class="sec-intro">Top 5 in each test. Every athlete on this list earned it — celebrate it.</p>
+    <div class="awards-grid" id="awards-grid"></div>
+  </div>
+
+  <!-- LEADERBOARD TABLE -->
+  <div class="sec">
+    <div class="sec-header"><div class="sec-title">Full Leaderboard</div></div>
+    <p class="sec-intro">Click any column to sort. <strong>IQ Index</strong> is each athlete's average percentile across all five tests — a quick read on overall, well-rounded performance, not just one skill.</p>
+    <div class="table-wrap">
+      <table class="data" id="leader-table">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- COMPARE -->
+  <div class="sec">
+    <div class="sec-header"><div class="sec-title">Compare Athletes</div></div>
+    <p class="sec-intro">Tap up to 4 names to overlay their results. Each test is scaled to a percentile (0–100) so speed and jump metrics can be compared on the same chart.</p>
+    <div class="ctrl-group compare-picker">
+      <label>Select Athletes (up to 4)</label>
+      <div class="chip-row" id="compare-chips"></div>
+    </div>
+    <div class="compare-layout">
+      <div class="compare-chart-card">
+        <div id="compare-empty" class="compare-empty">Select 1–4 athletes above to compare.</div>
+        <canvas id="compare-radar" style="max-height:380px;display:none;"></canvas>
+      </div>
+      <div class="table-wrap">
+        <table class="data compare-table" id="compare-table">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="footer-brand">IN-GAME IQ</div>
+  <div class="footer-line">Train the Mind. Build the Player.</div>
+</div>
+
+<script>
+const RAW_DATA = [{"name": "Phoenix", "grade": "4th", "vertical": 16.7, "approach": 18.4, "sprint10": 1.872, "flying10": 1.595, "cod": 5.654}, {"name": "West", "grade": "5th", "vertical": 17.5, "approach": 19.2, "sprint10": 1.812, "flying10": 1.384, "cod": 5.126}, {"name": "Elijah", "grade": "5th", "vertical": 20.0, "approach": 25.6, "sprint10": 1.666, "flying10": 1.292, "cod": 4.893}, {"name": "Luc", "grade": "5th", "vertical": 15.5, "approach": 17.7, "sprint10": 1.873, "flying10": 1.461, "cod": 5.029}, {"name": "Jayce", "grade": "5th", "vertical": 17.7, "approach": 21.7, "sprint10": 1.759, "flying10": 1.425, "cod": 5.134}, {"name": "Jaiden", "grade": "5th", "vertical": 20.0, "approach": 22.2, "sprint10": 1.657, "flying10": 1.355, "cod": 4.735}, {"name": "Dom", "grade": "4th", "vertical": 12.3, "approach": 13.5, "sprint10": 1.966, "flying10": 1.641, "cod": 5.571}, {"name": "Noah", "grade": "5th", "vertical": 12.8, "approach": 14.4, "sprint10": 1.941, "flying10": 1.617, "cod": 5.64}, {"name": "Evan", "grade": "6th", "vertical": 16.4, "approach": 18.2, "sprint10": 1.669, "flying10": 1.387, "cod": 4.95}, {"name": "Max", "grade": "5th", "vertical": 13.7, "approach": 17.0, "sprint10": 1.907, "flying10": 1.571, "cod": 5.446}, {"name": "Marcus", "grade": "7th", "vertical": 19.4, "approach": 17.9, "sprint10": 1.793, "flying10": 1.47, "cod": 5.238}, {"name": "Zo", "grade": "5th", "vertical": 18.9, "approach": 20.4, "sprint10": 1.686, "flying10": 1.381, "cod": 4.824}, {"name": "Alex", "grade": "4th", "vertical": 12.3, "approach": 14.3, "sprint10": 2.168, "flying10": 1.945, "cod": 6.007}];
+const METRICS = [{"key": "vertical", "label": "Standing Vertical", "short": "Vertical", "unit": "in", "dir": "high", "decimals": 1}, {"key": "approach", "label": "Approach Vertical", "short": "Approach", "unit": "in", "dir": "high", "decimals": 1}, {"key": "sprint10", "label": "10-Yard Sprint", "short": "10-Yd", "unit": "s", "dir": "low", "decimals": 3}, {"key": "flying10", "label": "Flying 10", "short": "Flying 10", "unit": "s", "dir": "low", "decimals": 3}, {"key": "cod", "label": "5-10-5 (COD)", "short": "COD", "unit": "s", "dir": "low", "decimals": 3}];
+const TEAL = '#12C7CD';
+const TEAL_DEEP = '#0EA8AE';
+const COMPARE_COLORS = ['#12C7CD', '#E8A33D', '#B85FD1', '#5F9E5C'];
+
+function fmt(val, m){ return Number(val).toFixed(m.decimals); }
+
+function computeRanksAndPercentiles(pool){
+  // returns map: metricKey -> Map(name -> {rank, percentile})
+  const out = {};
+  METRICS.forEach(m => {
+    const sorted = [...pool].sort((a,b) => m.dir === 'high' ? b[m.key]-a[m.key] : a[m.key]-b[m.key]);
+    const map = new Map();
+    const n = sorted.length;
+    sorted.forEach((row, i) => {
+      const pct = n > 1 ? Math.round(100 * (n - 1 - i) / (n - 1)) : 100;
+      map.set(row.name, {rank: i+1, percentile: pct});
+    });
+    out[m.key] = map;
+  });
+  return out;
+}
+
+function iqIndex(name, ranks){
+  let sum = 0;
+  METRICS.forEach(m => sum += ranks[m.key].get(name).percentile);
+  return Math.round(sum / METRICS.length);
+}
+
+function statTwin(name){
+  const ranks = computeRanksAndPercentiles(RAW_DATA);
+  const vecOf = n => METRICS.map(m => ranks[m.key].get(n).percentile);
+  const target = vecOf(name);
+  let bestName = null, bestDist = Infinity;
+  RAW_DATA.forEach(a => {
+    if(a.name === name) return;
+    const v = vecOf(a.name);
+    let dist = 0;
+    for(let i=0;i<v.length;i++) dist += (v[i]-target[i])**2;
+    dist = Math.sqrt(dist);
+    if(dist < bestDist){ bestDist = dist; bestName = a.name; }
+  });
+  const maxDist = Math.sqrt(METRICS.length * 100 * 100);
+  const similarity = Math.round(100 * (1 - bestDist/maxDist));
+  return { name: bestName, similarity };
+}
+
+let currentGrade = 'all';
+let compareSelection = [];
+
+function pool(){
+  return currentGrade === 'all' ? RAW_DATA : RAW_DATA.filter(a => a.grade === currentGrade);
+}
+
+function renderKPIs(){
+  const p = pool();
+  const bestVert = [...p].sort((a,b)=>b.vertical-a.vertical)[0];
+  const bestSprint = [...p].sort((a,b)=>a.sprint10-b.sprint10)[0];
+  const bestCod = [...p].sort((a,b)=>a.cod-b.cod)[0];
+  document.getElementById('m-count').textContent = RAW_DATA.length;
+  document.getElementById('kpi-row').innerHTML = `
+    <div class="kpi-card"><div class="kpi-label">Athletes (view)</div><div class="kpi-value">${p.length}</div><div class="kpi-sub">of ${RAW_DATA.length} total tested</div></div>
+    <div class="kpi-card"><div class="kpi-label">Top Vertical</div><div class="kpi-value"><span>${fmt(bestVert.vertical,{decimals:1})}"</span></div><div class="kpi-sub">${bestVert.name} (${bestVert.grade})</div></div>
+    <div class="kpi-card"><div class="kpi-label">Fastest 10-Yd Sprint</div><div class="kpi-value"><span>${fmt(bestSprint.sprint10,{decimals:2})}s</span></div><div class="kpi-sub">${bestSprint.name} (${bestSprint.grade})</div></div>
+    <div class="kpi-card"><div class="kpi-label">Quickest COD</div><div class="kpi-value"><span>${fmt(bestCod.cod,{decimals:2})}s</span></div><div class="kpi-sub">${bestCod.name} (${bestCod.grade})</div></div>
+  `;
+}
+
+function renderAwards(){
+  const p = pool();
+  const ranks = computeRanksAndPercentiles(p);
+  const grid = document.getElementById('awards-grid');
+  grid.innerHTML = '';
+  METRICS.forEach(m => {
+    const sorted = [...p].sort((a,b)=> m.dir==='high' ? b[m.key]-a[m.key] : a[m.key]-b[m.key]).slice(0,5);
+    const rows = sorted.map((a,i) => `
+      <div class="podium-row">
+        <div class="podium-rank r${i+1}">${i+1}</div>
+        <div class="podium-name">${a.name}</div>
+        <div class="podium-val">${fmt(a[m.key], m)}${m.unit}</div>
+      </div>`).join('');
+    grid.innerHTML += `<div class="award-card"><div class="award-title">${m.label}</div>${rows}</div>`;
+  });
+}
+
+function renderAthleteSelect(){
+  const sel = document.getElementById('athlete-select');
+  [...RAW_DATA].sort((a,b)=>a.name.localeCompare(b.name)).forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = a.name; opt.textContent = `${a.name} (${a.grade})`;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', renderAthletePanel);
+}
+
+function renderGradeSelect(){
+  const grades = [...new Set(RAW_DATA.map(a=>a.grade))].sort();
+  const sel = document.getElementById('grade-select');
+  grades.forEach(g => {
+    const opt = document.createElement('option');
+    opt.value = g; opt.textContent = g + ' Grade';
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', e => { currentGrade = e.target.value; renderAll(); });
+}
+
+function renderAthletePanel(){
+  const name = document.getElementById('athlete-select').value;
+  const panel = document.getElementById('athlete-panel');
+  if(!name){ panel.classList.remove('show'); return; }
+  panel.classList.add('show');
+  const athlete = RAW_DATA.find(a=>a.name===name);
+  const ranks = computeRanksAndPercentiles(RAW_DATA);
+  document.getElementById('a-name').innerHTML = athlete.name;
+  document.getElementById('a-grade').textContent = athlete.grade + ' Grade';
+  document.getElementById('a-index').textContent = iqIndex(name, ranks);
+  const statsEl = document.getElementById('a-stats');
+  statsEl.innerHTML = METRICS.map(m => {
+    const r = ranks[m.key].get(name);
+    return `<div class="astat">
+      <div class="astat-label">${m.label}</div>
+      <div class="astat-value">${fmt(athlete[m.key], m)}<small> ${m.unit}</small></div>
+      <div class="astat-bar"><div class="astat-bar-fill" style="width:${r.percentile}%"></div></div>
+      <div class="astat-rank">Rank #${r.rank} of ${RAW_DATA.length}</div>
+    </div>`;
+  }).join('');
+  const twin = statTwin(name);
+  document.getElementById('a-twin').innerHTML = `<span class="twin-label">Stat Twin</span><span class="twin-name">${twin.name}</span><span class="twin-pct">${twin.similarity}% statistical match across all 5 tests</span>`;
+}
+
+let sortState = {col: 'index', dir: 'desc'};
+
+function renderTable(){
+  const p = pool();
+  const ranks = computeRanksAndPercentiles(p);
+  const rows = p.map(a => ({...a, index: iqIndex(a.name, ranks)}));
+
+  const cols = [
+    {key:'name', label:'Athlete'},
+    {key:'grade', label:'Grade'},
+    ...METRICS.map(m=>({key:m.key, label:m.short, unit:m.unit, decimals:m.decimals, dir:m.dir})),
+    {key:'index', label:'IQ Index'},
+  ];
+
+  function sortRows(){
+    const col = sortState.col;
+    const meta = cols.find(c=>c.key===col);
+    rows.sort((a,b) => {
+      let av=a[col], bv=b[col];
+      if(typeof av === 'string') { av = av.toLowerCase(); bv = bv.toLowerCase(); }
+      let cmp = av < bv ? -1 : av > bv ? 1 : 0;
+      if(meta && meta.dir === 'low') cmp = -cmp; // low-is-better metrics: default desc shows best first when reversed
+      return sortState.dir === 'desc' ? -cmp : cmp;
+    });
+  }
+
+  function draw(){
+    sortRows();
+    const thead = document.querySelector('#leader-table thead');
+    thead.innerHTML = '<tr>' + cols.map(c => {
+      const arrow = sortState.col === c.key ? `<span class="sort-arrow">${sortState.dir==='desc'?'▼':'▲'}</span>` : '';
+      return `<th data-col="${c.key}">${c.label}${arrow}</th>`;
+    }).join('') + '</tr>';
+    thead.querySelectorAll('th').forEach(th => th.onclick = () => {
+      const col = th.dataset.col;
+      if(sortState.col === col) sortState.dir = sortState.dir === 'desc' ? 'asc' : 'desc';
+      else { sortState.col = col; sortState.dir = 'desc'; }
+      draw();
+    });
+
+    const bestVals = {};
+    cols.forEach(c => {
+      if(c.key==='name'||c.key==='grade') return;
+      const m = METRICS.find(mm=>mm.key===c.key);
+      if(c.key === 'index'){ bestVals[c.key] = Math.max(...rows.map(r=>r.index)); }
+      else if(m) { bestVals[c.key] = m.dir==='high' ? Math.max(...rows.map(r=>r[c.key])) : Math.min(...rows.map(r=>r[c.key])); }
+    });
+
+    const tbody = document.querySelector('#leader-table tbody');
+    tbody.innerHTML = rows.map(r => {
+      return '<tr>' + cols.map(c => {
+        if(c.key==='name') return `<td class="name-cell">${r.name}</td>`;
+        if(c.key==='grade') return `<td>${r.grade}</td>`;
+        const m = METRICS.find(mm=>mm.key===c.key);
+        const val = c.key==='index' ? r.index : fmt(r[c.key], m);
+        const unit = c.key==='index' ? '' : m.unit;
+        const isBest = bestVals[c.key] !== undefined && Number(val) === Number(bestVals[c.key]);
+        return `<td class="${isBest?'best':''}">${val}${unit}</td>`;
+      }).join('') + '</tr>';
+    }).join('');
+  }
+  draw();
+}
+
+function renderCompareChips(){
+  const container = document.getElementById('compare-chips');
+  container.innerHTML = '';
+  [...RAW_DATA].sort((a,b)=>a.name.localeCompare(b.name)).forEach(a => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.textContent = a.name;
+    chip.onclick = () => {
+      const idx = compareSelection.indexOf(a.name);
+      if(idx >= 0){ compareSelection.splice(idx,1); }
+      else { if(compareSelection.length >= 4) compareSelection.shift(); compareSelection.push(a.name); }
+      renderCompare();
+      renderCompareChips();
+    };
+    if(compareSelection.includes(a.name)) chip.classList.add('active');
+    container.appendChild(chip);
+  });
+}
+
+let radarChart = null;
+function renderCompare(){
+  const emptyEl = document.getElementById('compare-empty');
+  const canvas = document.getElementById('compare-radar');
+  const ranks = computeRanksAndPercentiles(RAW_DATA);
+
+  if(compareSelection.length === 0){
+    emptyEl.style.display = 'block';
+    canvas.style.display = 'none';
+  } else {
+    emptyEl.style.display = 'none';
+    canvas.style.display = 'block';
+    const datasets = compareSelection.map((name, i) => ({
+      label: name,
+      data: METRICS.map(m => ranks[m.key].get(name).percentile),
+      borderColor: COMPARE_COLORS[i % COMPARE_COLORS.length],
+      backgroundColor: COMPARE_COLORS[i % COMPARE_COLORS.length] + '33',
+      pointBackgroundColor: COMPARE_COLORS[i % COMPARE_COLORS.length],
+      borderWidth: 2,
+    }));
+    const cfg = {
+      type: 'radar',
+      data: { labels: METRICS.map(m=>m.short), datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            min: 0, max: 100,
+            ticks: { display: false, stepSize: 25 },
+            grid: { color: 'rgba(255,255,255,.12)' },
+            angleLines: { color: 'rgba(255,255,255,.12)' },
+            pointLabels: { color: 'rgba(255,255,255,.8)', font: { family: 'Rajdhani', size: 12, weight: 600 } }
+          }
+        },
+        plugins: {
+          legend: { labels: { color: 'rgba(255,255,255,.85)', font: { family: 'Rajdhani' } } },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                const name = ctx.dataset.label;
+                const mKey = METRICS[ctx.dataIndex].key;
+                const m = METRICS[ctx.dataIndex];
+                const athlete = RAW_DATA.find(a=>a.name===name);
+                return `${name}: ${fmt(athlete[mKey], m)}${m.unit} (${ctx.parsed.r}th pct)`;
+              }
+            }
+          }
+        }
+      }
+    };
+    if(radarChart) radarChart.destroy();
+    radarChart = new Chart(canvas.getContext('2d'), cfg);
+  }
+
+  // comparison table
+  const thead = document.querySelector('#compare-table thead');
+  const tbody = document.querySelector('#compare-table tbody');
+  if(compareSelection.length === 0){
+    thead.innerHTML = ''; tbody.innerHTML = '';
+    return;
+  }
+  thead.innerHTML = '<tr><th>Test</th>' + compareSelection.map(n=>`<th>${n}</th>`).join('') + '</tr>';
+  tbody.innerHTML = METRICS.map(m => {
+    const vals = compareSelection.map(n => RAW_DATA.find(a=>a.name===n)[m.key]);
+    const best = m.dir==='high' ? Math.max(...vals) : Math.min(...vals);
+    return `<tr><td class="name-cell">${m.label}</td>` + vals.map(v => {
+      const isBest = v === best;
+      return `<td class="${isBest?'best':''}">${fmt(v,m)}${m.unit}</td>`;
+    }).join('') + '</tr>';
+  }).join('');
+}
+
+function renderAll(){
+  renderKPIs();
+  renderAwards();
+  renderTable();
+  renderCompare();
+}
+
+renderAthleteSelect();
+renderGradeSelect();
+renderCompareChips();
+renderAll();
+</script>
+</body>
+</html>
